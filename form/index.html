@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>نموذج أسئلة — حروف المناسبة</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#FBF4EA;--card:#fff;--ink:#3A2A1E;--muted:#8A7462;--line:#EADBC8;--or:#E07A2E;--bl:#2D6FB7;--ok:#2E9E5B;--bad:#D64545;--warn:#E9A24C}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:"Tajawal",system-ui,Tahoma,sans-serif}
+.wrap{max-width:640px;margin:0 auto;padding:16px 14px 120px}
+.hero{background:linear-gradient(160deg,#3A2A1E,#7A5236);color:#fff;border-radius:22px;padding:22px 18px;margin-bottom:14px}
+.hero h1{margin:0 0 6px;font-size:26px}
+.hero p{margin:0;opacity:.92;line-height:1.7;font-size:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:12px}
+h2{font-size:19px;margin:18px 4px 10px}
+label{display:block;font-weight:700;margin:10px 0 5px;font-size:15px}
+.opt{font-weight:400;color:var(--muted);font-size:13px}
+input,textarea,select{width:100%;font-family:inherit;font-size:17px;padding:12px;border:2px solid var(--line);border-radius:12px;background:#fff;color:var(--ink)}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--or)}
+textarea{min-height:64px;resize:vertical}
+.tips{margin:0;padding-right:18px;line-height:1.9;font-size:15px}
+.tips b{color:var(--or)}
+.q{position:relative}
+.q-head{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+.num{background:var(--ink);color:#fff;border-radius:999px;min-width:30px;height:30px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;padding:0 8px}
+.tag{font-size:13px;font-weight:700;border-radius:999px;padding:4px 10px;background:#F3E6D6}
+.tag.spare{background:#E7F0FA;color:var(--bl)}
+.letter{margin-inline-start:auto;width:42px;height:42px;border-radius:50%;border:3px solid var(--or);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;background:#fff}
+.letter.empty{border-color:var(--line);color:#C9B8A6}
+.del{background:none;border:none;color:var(--bad);font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;padding:6px}
+.msg{font-size:14px;font-weight:700;margin-top:8px;padding:8px 10px;border-radius:10px}
+.msg.bad{background:#FDECEC;color:var(--bad)}
+.msg.warn{background:#FFF3E2;color:#9A5B00}
+button.big{width:100%;font-family:inherit;font-size:18px;font-weight:800;border:none;border-radius:14px;padding:16px;min-height:58px;cursor:pointer}
+.add{background:#fff;color:var(--ink);border:2px dashed var(--muted)!important}
+.primary{background:linear-gradient(135deg,#3A2A1E,#6B4A33);color:#fff}
+.bar{position:fixed;bottom:0;left:0;right:0;background:rgba(251,244,234,.97);border-top:1px solid var(--line);padding:10px 14px calc(10px + env(safe-area-inset-bottom))}
+.bar-in{max-width:640px;margin:0 auto;display:flex;gap:10px;align-items:center}
+.count{flex:1;font-weight:800;font-size:15px;line-height:1.4}
+.count small{display:block;font-weight:500;color:var(--muted);font-size:13px}
+.prog{height:6px;background:var(--line);border-radius:6px;overflow:hidden;margin-top:4px}
+.prog div{height:100%;background:var(--or);transition:width .3s}
+.bar button{font-family:inherit;font-size:16px;font-weight:800;border:none;border-radius:12px;padding:12px 16px;background:var(--ok);color:#fff;cursor:pointer}
+.letters{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.lt{min-width:34px;height:34px;padding:0 6px;border-radius:9px;background:#F3E6D6;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px}
+.lt.hot{background:#FDECEC;color:var(--bad)}
+.lt sub{font-size:11px;margin-right:2px;color:var(--muted)}
+.modal{position:fixed;inset:0;background:rgba(30,20,12,.55);display:flex;align-items:flex-end;justify-content:center;z-index:50}
+.modal .box{background:var(--bg);width:100%;max-width:640px;max-height:92vh;overflow:auto;border-radius:22px 22px 0 0;padding:18px 16px 24px}
+.modal pre{direction:ltr;text-align:left;background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px;font-size:12px;white-space:pre-wrap;word-break:break-word;max-height:40vh;overflow:auto;user-select:all}
+.row{display:flex;gap:10px}.row>*{flex:1}
+.soft{background:#F3E6D6;color:var(--ink)}
+.toast{position:fixed;top:16px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 18px;border-radius:999px;font-weight:700;z-index:80}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<div class="bar"><div class="bar-in">
+  <div class="count" id="count"></div>
+  <button id="done">إرسال</button>
+</div></div>
+
+<script>
+(function(){
+  const KEY = 'huroof_form_v1';
+  const $ = id => document.getElementById(id);
+  const ar = n => Number(n).toLocaleString('ar-SA');
+  const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+  let S = { occasion: '', person: '', size: 5, qs: [] };
+  try { const r = localStorage.getItem(KEY); if (r) S = Object.assign(S, JSON.parse(r)); } catch (e) {}
+  if (!S.qs.length) for (let i = 0; i < 3; i++) S.qs.push({ q: '', a: '', s: '' });
+  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} };
+
+  // الحرف من أول حرف في الإجابة: نتجاهل «ال»، ونوحّد الهمزات
+  function letterOf(ans) {
+    let a = String(ans || '').trim().replace(/^[«"'(\[]+/, '');
+    if (a.startsWith('ال') && a.length > 2) a = a.slice(2);
+    let c = a.charAt(0);
+    if ('أإآا'.includes(c)) c = 'أ';
+    if (c === 'ى' || c === 'ئ') c = 'ي';
+    if (c === 'ؤ') c = 'و';
+    return /[ء-ي]/.test(c) ? c : (a ? '!' : '');
+  }
+
+  const need = () => S.size * S.size;
+
+  function analyze() {
+    const filled = S.qs.map((x, i) => ({ ...x, i, L: letterOf(x.a) })).filter(x => x.q.trim() && x.a.trim() && x.L && x.L !== '!');
+    const main = filled.slice(0, need()), spare = filled.slice(need());
+    const cnt = {}; main.forEach(x => cnt[x.L] = (cnt[x.L] || 0) + 1);
+    const role = {}; main.forEach(x => role[x.i] = 'main'); spare.forEach(x => role[x.i] = 'spare');
+    return { filled, main, spare, cnt, role };
+  }
+
+  function render() {
+    const A = analyze();
+    const cards = S.qs.map((x, i) => {
+      const L = letterOf(x.a), r = A.role[i];
+      let msg = '';
+      if (L === '!') msg = `<div class="msg bad">الإجابة لازم تبدأ بحرف عربي — لو فيها رقم اكتبه بالحروف (مثل: ثلاثين سنة)</div>`;
+      else if (x.q.trim() && !x.a.trim()) msg = `<div class="msg bad">ناقص الإجابة</div>`;
+      else if (!x.q.trim() && x.a.trim()) msg = `<div class="msg bad">ناقص السؤال</div>`;
+      else if (r === 'main' && A.cnt[L] > 3) msg = `<div class="msg warn">حرف (${esc(L)}) متكرر ${ar(A.cnt[L])} مرات — الأفضل ما يزيد عن ٣. جرّب تصيغ الإجابة بكلمة ثانية</div>`;
+      else if (r === 'spare' && !A.cnt[L]) msg = `<div class="msg warn">هذا سؤال احتياطي، وحرفه (${esc(L)}) مو موجود في الشبكة — ما بينستخدم</div>`;
+      else if (/^(ايه|إيه|ايوه|لا|نعم|اي)$/.test(x.a.trim())) msg = `<div class="msg warn">إجابة إيه/لا تخمين ٥٠٪ — حاول تخلي الإجابة كلمة</div>`;
+      return `
+      <div class="card q">
+        <div class="q-head">
+          <div class="num">${ar(i + 1)}</div>
+          ${r === 'main' ? '<span class="tag">أساسي</span>' : r === 'spare' ? '<span class="tag spare">احتياطي</span>' : ''}
+          <button class="del" data-del="${i}">حذف</button>
+          <div class="letter ${L && L !== '!' ? '' : 'empty'}">${L && L !== '!' ? esc(L) : '؟'}</div>
+        </div>
+        <label>السؤال</label>
+        <input data-f="q" data-i="${i}" value="${esc(x.q)}" placeholder="مثال: وش أول سيارة اشتراها؟">
+        <label>الإجابة <span class="opt">(كلمة أو كلمتين — الحرف يطلع منها تلقائيًا)</span></label>
+        <input data-f="a" data-i="${i}" value="${esc(x.a)}" placeholder="مثال: كامري">
+        <label>القصة <span class="opt">(اختياري، لكنها أحلى جزء في اللعبة)</span></label>
+        <textarea data-f="s" data-i="${i}" placeholder="مثال: تعطّلت معه أول يوم وهو رايح يخطب 😂">${esc(x.s)}</textarea>
+        ${msg}
+      </div>`;
+    }).join('');
+
+    const letters = Object.entries(A.cnt).sort((a, b) => b[1] - a[1])
+      .map(([l, n]) => `<div class="lt ${n > 3 ? 'hot' : ''}">${esc(l)}${n > 1 ? `<sub>×${ar(n)}</sub>` : ''}</div>`).join('');
+
+    $('app').innerHTML = `
+      <div class="hero">
+        <h1>نموذج أسئلة «حروف المناسبة»</h1>
+        <p>اكتب أسئلة عن الشخص اللي نحتفل فيه، وإجابة كل سؤال. كل إجابة تصير خلية في اللعبة بحرفها الأول.</p>
+      </div>
+
+      <div class="card">
+        <label>اسم المناسبة</label>
+        <input data-top="occasion" value="${esc(S.occasion)}" placeholder="مثال: تقاعد الأستاذ أحمد">
+        <label>اسم الشخص المحتفى به</label>
+        <input data-top="person" value="${esc(S.person)}" placeholder="مثال: أحمد">
+        <label>حجم اللعبة</label>
+        <select id="size">
+          ${[[3, 'صغيرة — ٩ أسئلة'], [4, 'متوسطة — ١٦ سؤال'], [5, 'كاملة — ٢٥ سؤال (الأصلية)']].map(([n, t]) => `<option value="${n}" ${S.size === n ? 'selected' : ''}>${t}</option>`).join('')}
+        </select>
+      </div>
+
+      <div class="card">
+        <ul class="tips">
+          <li>المطلوب <b>${ar(need())} سؤال أساسي</b>، وأي سؤال زيادة يصير <b>احتياطي</b> — اختياري، يُستخدم بس لو محد عرف سؤال وانكشفت إجابته.</li>
+          <li>الاحتياطي لازم <b>حرفه موجود</b> في الأسئلة الأساسية.</li>
+          <li>الإجابة <b>كلمة أو كلمتين</b>، وتجنّب إجابات إيه/لا.</li>
+          <li>«ال» ما تنحسب: «الهلال» حرفها <b>هـ</b>.</li>
+          <li>لا يتكرر الحرف <b>أكثر من ٣ مرات</b>.</li>
+          <li>اللي تكتبه ينحفظ في هذا الجهاز، تقدر تكمّل بعدين.</li>
+        </ul>
+        ${letters ? `<label style="margin-top:12px">الحروف في الشبكة حتى الآن</label><div class="letters">${letters}</div>` : ''}
+      </div>
+
+      <h2>الأسئلة</h2>
+      ${cards}
+      <button class="big add" id="add">＋ إضافة سؤال</button>
+    `;
+
+    const done = A.main.length, n = need();
+    $('count').innerHTML = `${ar(Math.min(done, n))} من ${ar(n)} أساسي · ${ar(A.spare.length)} احتياطي
+      <div class="prog"><div style="width:${Math.min(100, done / n * 100)}%"></div></div>`;
+    bind();
+  }
+
+  function bind() {
+    document.querySelectorAll('[data-f]').forEach(el => el.oninput = () => {
+      S.qs[+el.dataset.i][el.dataset.f] = el.value; save();
+      if (el.dataset.f !== 's') softRefresh(el);
+    });
+    document.querySelectorAll('[data-top]').forEach(el => el.oninput = () => { S[el.dataset.top] = el.value; save(); });
+    $('size').onchange = e => { S.size = +e.target.value; save(); render(); };
+    $('add').onclick = () => { S.qs.push({ q: '', a: '', s: '' }); save(); render(); const all = document.querySelectorAll('[data-f="q"]'); all[all.length - 1].focus(); };
+    document.querySelectorAll('[data-del]').forEach(b => b.onclick = () => {
+      const i = +b.dataset.del, x = S.qs[i];
+      if ((x.q || x.a || x.s) && !b.dataset.sure) { b.dataset.sure = 1; b.textContent = 'متأكد؟ اضغط مرة ثانية'; return; }
+      S.qs.splice(i, 1); if (!S.qs.length) S.qs.push({ q: '', a: '', s: '' }); save(); render();
+    });
+  }
+
+  // نعيد الرسم بعد ما يوقف عن الكتابة، ونرجّع المؤشر لنفس الحقل
+  let t;
+  function softRefresh(el) {
+    clearTimeout(t);
+    t = setTimeout(() => {
+      const f = el.dataset.f, i = el.dataset.i, pos = el.selectionStart;
+      render();
+      const n = document.querySelector(`[data-f="${f}"][data-i="${i}"]`);
+      if (n) { n.focus(); try { n.setSelectionRange(pos, pos); } catch (e) {} }
+    }, 700);
+  }
+
+  function toast(m) { const d = document.createElement('div'); d.className = 'toast'; d.textContent = m; document.body.appendChild(d); setTimeout(() => d.remove(), 1800); }
+
+  function exportText() {
+    const A = analyze(), J = s => JSON.stringify(String(s || '').trim());
+    const line = x => `    { الحرف: ${J(x.L)}, سؤال: ${J(x.q)}, الإجابة: ${J(x.a)}, القصة: ${J(x.s)} },`;
+    return `const عدد_الصفوف = ${S.size};
+
+const بيانات_اللعبة = {
+  اسم_المناسبة: ${J(S.occasion)},
+  اسم_الشخص: ${J(S.person)},
+  الأسئلة: [
+${A.main.map(line).join('\n')}
+${A.spare.length ? '\n    // أسئلة احتياطية\n' + A.spare.map(line).join('\n') : ''}
+  ]
+};`;
+  }
+
+  $('done').onclick = () => {
+    const A = analyze(), n = need();
+    const problems = [];
+    if (!S.occasion.trim()) problems.push('اسم المناسبة ناقص');
+    if (!S.person.trim()) problems.push('اسم الشخص ناقص');
+    if (A.main.length < n) problems.push(`باقي ${ar(n - A.main.length)} سؤال أساسي`);
+    const hot = Object.entries(A.cnt).filter(([, c]) => c > 3).map(([l]) => l);
+    if (hot.length) problems.push(`حروف متكررة أكثر من ٣: ${hot.join('، ')}`);
+    const txt = exportText();
+    const m = document.createElement('div'); m.className = 'modal';
+    m.innerHTML = `<div class="box">
+      <h2 style="margin-top:0">${problems.length ? 'فيه نواقص' : 'جاهز ✅'}</h2>
+      ${problems.length ? `<div class="msg warn">${problems.map(esc).join('<br>')}<br>تقدر ترسله كذا، لكن الأفضل تكمّل.</div>` : ''}
+      <p style="line-height:1.7">اضغط «نسخ» وأرسل النص في واتساب للي طلب منك النموذج.</p>
+      <div class="card" style="margin:0">${ar(A.main.length)} سؤال أساسي · ${ar(A.spare.length)} احتياطي · ${ar(A.filled.filter(x => x.s.trim()).length)} قصة</div>
+      <details id="det" style="margin-top:10px"><summary style="cursor:pointer;color:var(--muted)">عرض النص اللي بينرسل</summary><pre id="out">${esc(txt)}</pre></details>
+      <div class="row" style="margin-top:12px">
+        <button class="big primary" id="copy">نسخ</button>
+        <button class="big soft" id="close">رجوع</button>
+      </div></div>`;
+    document.body.appendChild(m);
+    m.querySelector('#close').onclick = () => m.remove();
+    m.querySelector('#copy').onclick = async () => {
+      try { await navigator.clipboard.writeText(txt); toast('تم النسخ ✓'); }
+      catch (e) {
+        m.querySelector('#det').open = true; const r = document.createRange(); r.selectNodeContents(m.querySelector('#out'));
+        const sel = getSelection(); sel.removeAllRanges(); sel.addRange(r);
+        toast('النص محدد — انسخه يدويًا');
+      }
+    };
+  };
+
+  render();
+})();
+</script>
+</body>
+</html>
