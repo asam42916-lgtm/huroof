@@ -53,6 +53,7 @@ button.big{width:100%;font-family:inherit;font-size:18px;font-weight:800;border:
 .modal pre{direction:ltr;text-align:left;background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px;font-size:12px;white-space:pre-wrap;word-break:break-word;max-height:40vh;overflow:auto;user-select:all}
 .row{display:flex;gap:10px}.row>*{flex:1}
 .soft{background:#F3E6D6;color:var(--ink)}
+a.big.wa{display:block;text-align:center;text-decoration:none;box-sizing:border-box;margin-top:12px;background:#25D366;color:#fff;font-size:19px;font-weight:800;border-radius:14px;padding:16px;min-height:58px}
 .toast{position:fixed;top:16px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 18px;border-radius:999px;font-weight:700;z-index:80}
 </style>
 </head>
@@ -60,7 +61,7 @@ button.big{width:100%;font-family:inherit;font-size:18px;font-weight:800;border:
 <div class="wrap" id="app"></div>
 <div class="bar"><div class="bar-in">
   <div class="count" id="count"></div>
-  <button id="done">إرسال</button>
+  <button id="done">خلصت — جهّز النص</button>
 </div></div>
 
 <script>
@@ -225,11 +226,12 @@ ${A.spare.length ? '\n    // أسئلة احتياطية\n' + A.spare.map(line).
     m.innerHTML = `<div class="box">
       <h2 style="margin-top:0">${problems.length ? 'فيه نواقص' : 'جاهز ✅'}</h2>
       ${problems.length ? `<div class="msg warn">${problems.map(esc).join('<br>')}<br>تقدر ترسله كذا، لكن الأفضل تكمّل.</div>` : ''}
-      <p style="line-height:1.7">اضغط «نسخ» وأرسل النص في واتساب للي طلب منك النموذج.</p>
+      <p style="line-height:1.7">اضغط «أرسل بواتساب» واختر المحادثة اللي تبي ترسل لها. لو ما انفتح واتساب أو انقطع النص، اضغط «نسخ» والصقه بنفسك.</p>
       <div class="card" style="margin:0">${ar(A.main.length)} سؤال أساسي · ${ar(A.spare.length)} احتياطي · ${ar(A.filled.filter(x => x.s.trim()).length)} قصة</div>
       <details id="det" style="margin-top:10px"><summary style="cursor:pointer;color:var(--muted)">عرض النص اللي بينرسل</summary><pre id="out">${esc(txt)}</pre></details>
-      <div class="row" style="margin-top:12px">
-        <button class="big primary" id="copy">نسخ</button>
+      <a class="big wa" id="wa" href="https://wa.me/?text=${encodeURIComponent(txt)}" target="_blank" rel="noopener">أرسل بواتساب</a>
+      <div class="row" style="margin-top:10px">
+        <button class="big soft" id="copy">نسخ</button>
         <button class="big soft" id="close">رجوع</button>
       </div></div>`;
     document.body.appendChild(m);
